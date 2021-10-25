@@ -1,6 +1,6 @@
 | ics | title                                      | stage  | category                        | kind       | requires  | required-by     | author                               | created  | modified  |
 | ---------------- | ---------------------------------------------- | ---------- | ----------------------------------- | -------------- | ------------- | --------------------- | ---------------------------------------- | ------------ | ------------- |
-| 24               | Relayer Algorithms | draft  | TIBC/TAO  | interface  | 23            |  | | 2021-07-26   | 2021-07-26   |
+| 18               | Relayer Algorithms | draft  | TIBC/TAO  | interface  | 23            |  | | 2021-07-26   | 2021-07-26   |
 
 ## Synopsis 大纲
 

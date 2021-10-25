@@ -40,7 +40,7 @@ All standards at or past the "Draft" stage are listed here in order of their ICS
 | ------------------------------------------------------------- | -------------------------- | ----- |
 | [2](core/tics-002-client-semantics/README.md)             | Client Semantics           | Candidate |
 | [4](core/tics-004-port-and-packet-semantics/README.md) | Port & Packet Semantics | Candidate |
-| [24](core/tics-024-host-Environments/README.md)           | Host Requirements          | Candidate |
+| [24](core/tics-024-Host-Environments/README.md)           | Host Environments          | Candidate |
 | [26](core/tics-026-packet-routing/README.md)              | Packet Routing             | Candidate |
 
 ### Client
