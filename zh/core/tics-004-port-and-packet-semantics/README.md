@@ -16,7 +16,7 @@ TIBC 协议必须提供准确一次的传递保证，以允许应用程序推断
 
 ### 定义
 
-`ConsensusState `符合 [TICS 2 ](../yics-002-client-semantics)中的定义。
+`ConsensusState `符合 [TICS 2 ](../tics-002-client-semantics)中的定义。
 
 `Port` 是一种特殊的标识符，用于对模块进行权限通道打开和使用。
 
@@ -29,7 +29,7 @@ enum Port {
 }
 ```
 
-`module` 是独立于 TIBC 处理程序的主机状态机的子组件。例子包括 Ethereum 智能合同和 Cosmos SDK & 基本模块。TIBC 规范除了主机状态机使用对象能力或源身份验证对模块的权限端口的能力之外，没有对模块功能进行任何设想。
+`module` 是独立于 TIBC 处理程序的主机状态机的子组件。例子包括 Ethereum 智能合约和 Cosmos SDK & Substrate 模块。TIBC 规范除了主机状态机使用对象能力或源身份验证对模块的权限端口的能力之外，没有对模块功能进行任何设想。
 
 `hash` 是一种通用的抗冲突散列函数，其细节必须由使用该通道的模块商定。`hash`可以由不同的链来定义。
 
@@ -55,7 +55,7 @@ interface Packet {
 
 > 请注意，`Packet` 永远不会直接序列化。 相反，它是在某些函数调用中使用的中间结构，可能需要由调用 TIBC 处理程序的模块创建或处理。
 
-> `Openepacket` 是一个数据包，但由主机状态机隐藏在模糊数据类型中，因此模块只能将其传递给 TIBC 处理程序，而不能对其进行操作。TIBC 处理程序可以将一个 Packet 强制转换为一个 OpaquePacket，反之亦然。
+> `OpaquePacket` 是一个数据包，但由主机状态机隐藏在模糊数据类型中，因此模块只能将其传递给 TIBC 处理程序，而不能对其进行操作。TIBC 处理程序可以将一个 Packet 强制转换为一个 OpaquePacket，反之亦然。
 
 ```go
 type OpaquePacket = object
