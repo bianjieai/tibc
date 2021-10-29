@@ -1,6 +1,6 @@
 | ics | title                                      | stage  | category                        | kind       | requires  | required-by     | author                               | created  | modified  |
 | ---------------- | ---------------------------------------------- | ---------- | ----------------------------------- | -------------- | ------------- | --------------------- | ---------------------------------------- | ------------ | ------------- |
-| 24               | Host Environments | draft  | IBC/TAO  | interface  | 23            |  | | 2021-07-21   | 2021-07-21   |
+| 24               | Host Environments | draft  | TIBC/TAO | interface  | 23            |  | | 2021-07-21   | 2021-07-21   |
 
 ## Synopsis 大纲
 
@@ -8,13 +8,13 @@
 
 ### Motivation 动机
 
-tIBC 被设计成一个通用标准，将由各种区块链和状态机托管，并且必须明确定义主机的要求。
+TIBC 被设计成一个通用标准，将由各种区块链和状态机托管，并且必须明确定义主机的要求。
 
 ### Definitions 定义
 
 ### Desired Properties 期望的特性
 
-tIBC 应该要求底层状态机提供尽可能简单的接口，以最大限度地提高正确实现的易用性。
+TIBC 应该要求底层状态机提供尽可能简单的接口，以最大限度地提高正确实现的易用性。
 
 ## Technical Specification 技术规格
 
@@ -23,7 +23,7 @@ tIBC 应该要求底层状态机提供尽可能简单的接口，以最大限度
 
 主机状态机必须支持模块系统，通过该系统，独立的、可能相互不信任的代码包可以安全地在同一个账本上执行，控制它们如何以及何时允许其他模块与它们通信，并由“ master 模块”或执行环境识别和操作。
 
-tIBC/TAO规范定义了两个模块的实现：核心的“tIBC handler”模块和“tIBC relayer”模块。tIBC/APP 规范进一步定义了用于特定分组处理应用程序逻辑的其他模块。tIBC 要求可以使用“ master 模块”或执行环境来授予主机状态机上的其他模块对 tIBC 处理程序模块 和/或 tIBC routing 模块的访问权限，但在其他方面，不会对可能位于状态机上的任何其他模块的功能或通信能力提出要求。
+TIBC/TAO规范定义了两个模块的实现：核心的“TIBC handler”模块和“TIBC relayer”模块。TIBC/APP 规范进一步定义了用于特定分组处理应用程序逻辑的其他模块。TIBC 要求可以使用“ master 模块”或执行环境来授予主机状态机上的其他模块对 TIBC 处理程序模块 和/或 TIBC routing 模块的访问权限，但在其他方面，不会对可能位于状态机上的任何其他模块的功能或通信能力提出要求。
 
 ### Paths, identifiers, separators 路径，标识符，分隔符
 
@@ -51,7 +51,7 @@ tIBC/TAO规范定义了两个模块的实现：核心的“tIBC handler”模块
 
 | Port identifier | Client identifier 客户标识符 |
 | -------------------------- | ---------------------------- |
-| 2 - 64             | 9 - 64 9-64                  |
+| 2 - 64             | 9 - 64                  |
 
 ### Key/value Store 键/值存储区
 
@@ -76,31 +76,31 @@ type delete = (path: Path) => void
 
 `privateStore`:
 
-- 可能支持外部证明，但不是必需的 -- tIBC 处理程序永远不会向其写入需要证明的数据。
+- 可能支持外部证明，但不是必需的 -- TIBC 处理程序永远不会向其写入需要证明的数据。
 - 可以使用规范的 proto3 数据结构，但不是必需的 -- 它可以使用应用程序环境首选的任何格式。
 
-> 注意：任何提供这些方法和属性的键/值存储接口对于 tIBC 来说都是足够的。主机状态机可以使用 path 和 value 映射来实现 “代理存储” ，path 和 value 映射与通过存储接口设置和检索的 path 和 value 对不直接匹配- path 可以分组到存储在页面中的 bucket 和 value 中，这些 bucket 和 value 可以在单个承诺中得到证明，path-spaces 可以以某种双射方式等非连续地重新映射，只要 `get`, `set`, 和 `delete` 的行为符合预期，并且其他机器可以在可证明存储中验证 path 和 value 对（或其不存在）的承诺证明。如果适用， store 必须在外部公开这个映射，以便客户（包括 relayer ）可以确定 store 的设计 以及如何构造证明。使用这种代理存储的机器的客户端也必须理解映射，因此它将需要新的客户端类型或参数化的客户端。
+> 注意：任何提供这些方法和属性的键/值存储接口对于 TIBC 来说都是足够的。主机状态机可以使用 path 和 value 映射来实现 “代理存储” ，path 和 value 映射与通过存储接口设置和检索的 path 和 value 对不直接匹配- path 可以分组到存储在页面中的 bucket 和 value 中，这些 bucket 和 value 可以在单个承诺中得到证明，path-spaces 可以以某种双射方式等非连续地重新映射，只要 `get`, `set`, 和 `delete` 的行为符合预期，并且其他机器可以在可证明存储中验证 path 和 value 对（或其不存在）的承诺证明。如果适用， store 必须在外部公开这个映射，以便客户（包括 relayer ）可以确定 store 的设计 以及如何构造证明。使用这种代理存储的机器的客户端也必须理解映射，因此它将需要新的客户端类型或参数化的客户端。
 
 > 注意：此接口不需要任何特定的存储后端或后端数据设计。状态机可以选择使用根据其需要配置的存储后端，只要上面的存储满足指定的接口并提供承诺证明。
 
 ### Path-space 路径空间
 
-目前， tIBC/TAO 为 `provoblestore` 和 `privateStore`  推荐以下路径前缀。
+目前， TIBC/TAO 为 `provoblestore` 和 `privateStore`  推荐以下路径前缀。
 
-未来的 path 可能会在协议的未来版本中使用，因此可证明存储中的整个 key-space 必须为 tIBC 处理程序保留。
+未来的 path 可能会在协议的未来版本中使用，因此可证明存储中的整个 key-space 必须为 TIBC 处理程序保留。
 
 只要本文定义的 key 格式与机器实现中实际使用的 key 格式之间存在 二分映射（二分图），可证明存储中使用的 key 就可以在每个客户端类型的基础上安全地变化。
 
-只要 tIBC handler 对所需的特定 key 具有独占访问权，私有存储的部分内容就可以安全地用于其他目的。只要在本文定义的 key 格式和在私有存储实现中实际使用的密钥格式之间存在 二分映射，在私有存储中使用的 key 就可以安全地变化。
+只要 TIBC handler 对所需的特定 key 具有独占访问权，私有存储的部分内容就可以安全地用于其他目的。只要在本文定义的 key 格式和在私有存储实现中实际使用的密钥格式之间存在 二分映射，在私有存储中使用的 key 就可以安全地变化。
 
 请注意，下面列出的与客户机相关的路径反映了[ICS 7] 中定义的 Tendermint 客户端，对于其他客户端类型可能有所不同。
 
 | Store          | Path format                                                                    | Value type        | Defined in |
 | -------------- | ------------------------------------------------------------------------------ | ----------------- | ---------------------- |
-| provableStore  | "clients/{identifier}/clientType"                                              | ClientType        | ICS 2 |
-| privateStore   | "clients/{identifier}/clientState"                                             | ClientState       | ICS 2 |
-| provableStore  | "clients/{identifier}/consensusStates/{height}"                                | ConsensusState    | ICS 7 |
-| privateStore   | "ports/{identifier}"                                                           | CapabilityKey     | ICS 5 |
+| provableStore  | "clients/{identifier}/clientType"                                              | ClientType        | TICS 2 |
+| privateStore   | "clients/{identifier}/clientState"                                             | ClientState       | TICS 2 |
+| provableStore  | "clients/{identifier}/consensusStates/{height}"                                | ConsensusState    | ICS 7  |
+| privateStore   | "ports/{identifier}"                                                           | CapabilityKey     | ICS 5  |
 
 
 
@@ -114,10 +114,10 @@ type delete = (path: Path) => void
 | 主机状态机                                                              |
 |                                                                                  |
 | +-------------------+       +--------------------+      +----------------------+ |
-| | Module Aardvark   | <-->  | tIBC Routing Module|      | IBC Handler Module   | |
+| | Module Aardvark   | <-->  | TIBC Routing Module|      | IBC Handler Module   | |
 | +-------------------+       |                    |      |                      | |
-|                             | Implements ICS 26. |      | Implements ICS 2, 5  | |
-|                             |                    |      | internally.          | |
+|                             | Implements TICS 26 |      | Implements TICS 2,   | |
+|                             |                    |      | ICS 5 internally.    | |
 | +-------------------+       |                    |      |                      | |
 | | Module Betazoid   | <-->  |                    | -->  | Exposes interface    | |
 | +-------------------+       |                    |      | defined in ICS 25.   | |
@@ -191,15 +191,15 @@ type currentTimestamp = () => uint64
 
 ### Port system  端口系统
 
-主机状态机必须实现 端口系统，其中 tIBC 处理程序可以允许主机状态机中的不同模块绑定到唯一命名的端口。端口由 `Identifier` 标识。
+主机状态机必须实现 端口系统，其中 TIBC 处理程序可以允许主机状态机中的不同模块绑定到唯一命名的端口。端口由 `Identifier` 标识。
 
-主机状态机必须实现与 tIBC 处理程序的权限交互，以便：
+主机状态机必须实现与 TIBC 处理程序的权限交互，以便：
 
 - 一旦某个模块绑定到某个端口，在该模块释放该端口之前，其他模块都不能使用该端口
 - 一个模块可以绑定到多个端口
 - 端口分配为先到先服务，当状态机首次启动时，可以绑定已知模块的“保留”端口
 
-这种授权可以通过每个端口的唯一引用（对象功能）（Cosmos SDK的la）、源身份验证（Ethereum）或其他访问控制方法来实现，在任何情况下都是由主机状态机强制实现的。详见 ICS 5 。
+这种授权可以通过每个端口的唯一引用（对象功能）（Cosmos SDK）、源身份验证（Ethereum）或其他访问控制方法来实现，在任何情况下都是由主机状态机强制实现的。详见 ICS 5 。
 
 ### Datagram submission 数据报提交
 
@@ -208,24 +208,24 @@ type currentTimestamp = () => uint64
 ```
 type submitDatagram = (datagram: Datagram) => void
 ```
-`submitDatagram` 允许 relayer 将 tIBC 数据报直接提交到主机状态机上的路由模块。主机状态机可能要求提交数据报的 relayer 有一个支付交易费用的帐户，在更大的交易结构中对数据报进行签名，等等。 `submitDatagram` 必须定义和构造所需的任何此类打包。
+`submitDatagram` 允许 relayer 将 TIBC 数据报直接提交到主机状态机上的路由模块。主机状态机可能要求提交数据报的 relayer 有一个支付交易费用的帐户，在更大的交易结构中对数据报进行签名，等等。 `submitDatagram` 必须定义和构造所需的任何此类打包。
 
 ### Exception system 异常系统
 
 主机状态机必须支持异常系统，通过该系统，交易可以中止执行并还原以前所做的任何状态更改（包括同一交易中发生的其他模块中的状态更改），不包括消耗的 gas 和适当的费用支付，并且系统不变违规 可以停止状态机。
 
-此异常系统必须通过两个函数公开： `aborttransactionexcelless` 和 `abortSystemUnless` ，前者还原交易，后者停止状态机。
+此异常系统必须通过两个函数公开： `abortTransactionUnless` 和 `abortSystemUnless` ，前者还原交易，后者停止状态机。
 
 ```
 type abortTransactionUnless = (bool) => void
 ```
 
-如果传递给 `aborttransactionuncell` 的布尔值为 `true` ，则主机状态机无需执行任何操作。如果传递给 `aborttransactionuncell` 的布尔值为 `true` ，则主机状态机必须中止交易并还原以前所做的任何状态更改，不包括消耗的 gas 和适当的费用支付。
+如果传递给 `abortTransactionUnless` 的布尔值为 `true` ，则主机状态机无需执行任何操作。如果传递给 `abortTransactionUnless` 的布尔值为 `false` ，则主机状态机必须中止交易并还原以前所做的任何状态更改，不包括消耗的 gas 和适当的费用支付。
 
 ```
 type abortSystemUnless = (bool) => void
 ```
-如果传递给 `abotsystemunless` 的布尔值为 `true` ，则主机状态机无需执行任何操作。如果传递给 `abortSystemUnless` 的布尔值为 `true` ，则主机状态机必须停止。
+如果传递给 `abortSystemUnless` 的布尔值为 `true` ，则主机状态机无需执行任何操作。如果传递给 `abortSystemUnless` 的布尔值为 `false` ，则主机状态机必须停止。
 
 ### Data availability 数据可用性
 
@@ -239,7 +239,7 @@ IBC 数据包，以及其他不直接存储在状态向量中但 relay 依赖的
 
 ### Event logging system 事件记录系统
 
-主机状态机必须提供一个事件记录系统，在交易执行过程中可以记录任意数据，这些数据可以存储、索引，然后由执行状态机的进程查询。relayer 利用这些事件日志来读取 tIBC 数据包数据和超时，这些数据包数据和超时不是直接以链状态存储的（因为这种存储被认为是昂贵的），而是通过简洁的加密承诺（只存储承诺）。 
+主机状态机必须提供一个事件记录系统，在交易执行过程中可以记录任意数据，这些数据可以存储、索引，然后由执行状态机的进程查询。relayer 利用这些事件日志来读取 TIBC 数据包数据和超时，这些数据包数据和超时不是直接以链状态存储的（因为这种存储被认为是昂贵的），而是通过简洁的加密承诺（只存储承诺）。 
 
 该系统至少应具有一个用于发送日志条目的函数和一个用于查询过去日志的函数，大致如下所示。
 
@@ -258,7 +258,7 @@ type queryByTopic = (height: Height, topic: string) => []byte[]
 
 ### Handling upgrades 处理升级
 
-主机可以安全地升级其状态机的某些部分，而不会中断 tIBC 功能。为了安全地做到这一点， tIBC 处理程序逻辑必须与规范保持一致，并且所有 tIBC 相关的状态（在 provable 和 private 存储中）必须在整个升级过程中保持不变。如果在其他链上存在用于升级链的客户端，并且升级将更改轻客户端验证算法，则必须在升级之前通知这些客户端，以便它们可以安全地原子切换并保持连接和通道的连续性。
+主机可以安全地升级其状态机的某些部分，而不会中断 TIBC 功能。为了安全地做到这一点， TIBC 处理程序逻辑必须与规范保持一致，并且所有 TIBC 相关的状态（在 provable 和 private 存储中）必须在整个升级过程中保持不变。如果在其他链上存在用于升级链的客户端，并且升级将更改轻客户端验证算法，则必须在升级之前通知这些客户端，以便它们可以安全地原子切换并保持连接和通道的连续性。
 
 ## Backwards Compatibility 向后兼容性
 
