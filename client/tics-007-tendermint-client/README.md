@@ -1,36 +1,36 @@
-| tics  | title                                | stage | category | kind   | requires |
-| ----  | ------------------------------------ | ----- | -------- | ------ | -------- |
-| 7     | Tendermint 客户端(Tendermint Client)  | 草案   | IBC/TAO  | 实例化  | 2        |
+| tics |      title         | stage | category |     kind      | requires |
+| ---- | -----------------  | ----- | -------- | ------------- | -------- |
+|  7   | Tendermint Client  | draft | TIBC/TAO | instantiation |     2    |
 
-## 概要
+## Synopsis
 
-本规范文档描述了使用 Tendermint 共识的区块链客户端（验证算法）。
+This specification document describes a client (verification algorithm) for a blockchain using Tendermint consensus.
 
-### 动机
+### Motivation
 
-使用 Tendermint 共识算法复制的各种状态机可能希望通过`TIBC`与其他复制状态机或单机连接。
+State machines of various sorts replicated using the Tendermint consensus algorithm might like to interface with other replicated state machines or solo machines over `TIBC`.
 
-### 定义
+### Definitions
 
-功能和术语在 [TICS 2](../../core/tics-002-client-semantics) 中定义。
+Functions & terms are as defined in [TICS 2](../../core/tics-002-client-semantics).
 
-`currentTimestamp` 在 [TICS 24](../../core/tics-024-host-requirements) 中定义。
+`currentTimestamp` is as defined in [TICS 24](../../core/tics-024-host-requirements).
 
-Tendermint 轻客户端使用`TICS023`中定义的通用 Merkle 证明格式。
+The Tendermint light client uses the generalised Merkle proof format as defined in `ICS023`.
 
-`hash` 是一个通用的抗碰撞散列函数，可以轻松配置。
+`hash` is a generic collision-resistant hash function, and can easily be configured. 
 
-### 所需属性
+### Desired Properties
 
-该规范必须满足`TICS-002`中定义的客户端接口。
+This specification must satisfy the client interface defined in `TICS-002` .
 
-## 技术指标
+## Technical Specification
 
-该规范取决于[Tendermint 共识算法](https://github.com/tendermint/spec/blob/master/spec/consensus/consensus.md) 和[轻客户端算法](https://github.com/tendermint/spec/blob/master/spec/light-client/README.md)。
+This specification depends on the [Tendermint consensus algorithm](https://github.com/tendermint/spec/blob/master/spec/consensus/consensus.md) and [light client algorithm](https://github.com/tendermint/spec/blob/master/spec/light-client/README.md).
 
-### 客户端状态
+### Client state
 
-Tendermint 客户端状态跟踪当前版本、当前验证器集、信任期、解绑期、最新高度、最新时间戳（区块时间）和可能的冻结高度。
+The Tendermint client state tracks the current revision, current validator set, trusting period, unbonding period, latest height, latest timestamp (block time), and a possible frozen height.
 
 ```go
 type ClientState struct{
@@ -47,9 +47,9 @@ type ClientState struct{
 }
 ```
 
-### 共识状态
+### Consensus state
 
-Tendermint 客户端跟踪所有先前验证的共识状态的时间戳（区块时间）、验证者集和承诺根（这些可以在解绑期过后进行修剪，但不应事先修剪）。
+The Tendermint client tracks the timestamp (block time), validator set, and commitment root for all previously verified consensus states (these can be pruned after the unbonding period has passed, but should not be pruned beforehand).
 
 ```go
 type ConsensusState struct{
@@ -59,9 +59,9 @@ type ConsensusState struct{
 }
 ```
 
-### 高度
+### Height
 
-Tendermint 客户端的高度由两个 `uint64` 组成：修订号和修订中的高度。
+The height of a Tendermint client consists of two `uint64`s: the revision number, and the height in the revision. 
 
 ```go
 type Height struct{
@@ -70,7 +70,7 @@ type Height struct{
 }
 ```
 
-高度之间的比较实现如下：
+Comparison between heights is implemented as follows:
 
 ```go
 func Compare(a Height, b Height): Ord {
@@ -85,11 +85,11 @@ func Compare(a Height, b Height): Ord {
 }
 ```
 
-这旨在允许高度重置为 `0`，而修订号增加 `1`，以便通过零高度升级保留超时。
+This is designed to allow the height to reset to `0` while the revision number increases by `1` in order to preserve timeouts through zero-height upgrades. 
 
-### 区块头
+### Headers
 
-Tendermint 客户端标头包括高度、时间戳、提交根、完整的验证器集以及提交块的验证器的签名。
+The Tendermint client headers include the height, the timestamp, the commitment root, the complete validator set, and the signatures by the validators who committed the block.
 
 ```go
 type Header struct{
@@ -100,9 +100,9 @@ type Header struct{
 }
 ```
 
-### 客户端初始化
+### Client initialisation
 
-`Tendermint`客户端初始化需要（主观选择的）最新共识状态，包括完整的验证器集。为了清理过期的共识状态信息，需要记录每个`ConsensusState`的保存路径，方便客户端清理。
+`Tendermint` client initialisation requires a (subjectively chosen) latest consensus state, including the full validator set. To clean up expired consensus states, the storage path of every `ConsensusState` need to be recorded for client cleanup.
 
 ```go
 func (cs ClientState) Initialize(clientStore sdk.KVStore,consState ConsensusState) {
@@ -112,7 +112,7 @@ func (cs ClientState) Initialize(clientStore sdk.KVStore,consState ConsensusStat
 }
 ```
 
-### 状态
+### State
 
 ```go
 func (cs ClientState) Status(clientStore sdk.KVStore) Status {
@@ -124,9 +124,9 @@ func (cs ClientState) Status(clientStore sdk.KVStore) Status {
 }
 ```
 
-### 有效性断言
+### Validity predicate
 
-Tendermint 客户端有效性检查使用 [Tendermint 规范](https://github.com/tendermint/spec/tree/master/spec/consensus/light-client) 中描述的二分算法。
+Tendermint client validity checking uses the bisection algorithm described in the [Tendermint spec](https://github.com/tendermint/spec/tree/master/spec/consensus/light-client). 
 
 ```go
 func (cs ClientState) CheckHeaderAndUpdateState(header Header) {
@@ -152,11 +152,11 @@ func (cs ClientState) CheckHeaderAndUpdateState(header Header) {
 }
 ```
 
-### 状态验证功能
+### State verification functions
 
-Tendermint 客户端状态验证功能根据先前验证的承诺根检查 Merkle 证明。
+Tendermint client state verification functions check a Merkle proof against a previously validated commitment root.
 
-这些函数利用初始化客户端的`proofSpecs`。
+These functions utilise the `proofSpecs` with which the client was initialised. 
 
 ```go
 func (cs ClientState) VerifyPacketCommitment(
