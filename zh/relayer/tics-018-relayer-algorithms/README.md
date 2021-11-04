@@ -1,4 +1,4 @@
-| ics | title                                      | stage  | category                        | kind       | requires  | required-by     | author                               | created  | modified  |
+| tics | title                                      | stage  | category                        | kind       | requires  | required-by     | author                               | created  | modified  |
 | ---------------- | ---------------------------------------------- | ---------- | ----------------------------------- | -------------- | ------------- | --------------------- | ---------------------------------------- | ------------ | ------------- |
 | 18               | Relayer Algorithms | draft  | TIBC/TAO  | interface  | 23            |  | | 2021-07-26   | 2021-07-26   |
 
@@ -210,5 +210,5 @@ func validBasic(packet: Packet, counterparty: Chain)  error {
 
 ### 激励 Incentivisation
 
-relayer 进程必须必须能够访问两个链上的帐户，并有足够的余额支付交易费用。 relayer 可以采用应用程序级别的方法来补偿这些费用，例如通过在数据包数据中包括对自己的少量支付 -— relayer 费用支付的协议将在此 ICS 的未来版本中或在单独的 ICS 中进行描述。
+relayer 进程必须能够访问两个链上的帐户，并有足够的余额支付交易费用。 relayer 可以采用应用程序级别的方法来补偿这些费用，例如通过在数据包数据中包括对自己的少量支付 -— relayer 费用支付的协议将在此 ICS 的未来版本中或在单独的 ICS 中进行描述。
 
