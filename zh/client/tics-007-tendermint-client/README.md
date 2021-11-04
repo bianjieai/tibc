@@ -1,6 +1,6 @@
 | tics  | title                                | stage | category | kind   | requires |
 | ----  | ------------------------------------ | ----- | -------- | ------ | -------- |
-| 7     | Tendermint 客户端(Tendermint Client)  | 草案   | IBC/TAO  | 实例化  | 2        |
+| 7     | Tendermint 客户端(Tendermint Client)  | 草案   | TIBC/TAO | 实例化  | 2        |
 
 ## 概要
 
@@ -16,7 +16,7 @@
 
 `currentTimestamp` 在 [TICS 24](../../core/tics-024-host-requirements) 中定义。
 
-Tendermint 轻客户端使用`TICS023`中定义的通用 Merkle 证明格式。
+Tendermint 轻客户端使用`ICS 23`中定义的通用 Merkle 证明格式。
 
 `hash` 是一个通用的抗碰撞散列函数，可以轻松配置。
 
