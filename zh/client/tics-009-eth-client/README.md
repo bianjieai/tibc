@@ -115,7 +115,7 @@ type StorageResult struct {
 
 ### 客户端初始化
 
-客户端初始化是在客户端创建的时候进行 . 为满足`ETH`的分叉处理与 Header 验证需要，在此处应以 ( hash+height , headerByte ) 结构存储到`HeaderIndex`中 . 为满足 Header 快速索引需要  , 以（ header.root+height , hash+height ）存储 Header Index 的索引 key 。
+客户端初始化是在客户端创建的时候进行。为满足 `ETH` 的分叉处理与 `Header` 验证需要，在此处应以 ( hash+height , headerByte ) 结构存储到 `HeaderIndex` 中。为满足 `Header` 快速索引需要  , 以（ header.root+height , hash+height ）存储 Header Index 的索引 Key。
 
 ```go
 func (cs ClientState) Initialize(clientStore sdk.KVStore,consState ConsensusState) {
