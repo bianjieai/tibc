@@ -71,7 +71,7 @@ type ClientState struct{
 
 ### 共识状态
 
-`ETH`客户端保存了当前高度的时间戳、高度以及状态根信息。
+`ETH` 客户端保存了当前高度的时间戳、高度以及状态根信息。
 
 ```go
 type ConsensusState struct{
