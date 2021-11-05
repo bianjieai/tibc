@@ -20,7 +20,7 @@
 
 ## 技术指标
 
-该规范取决于[`pow`共识算法](https://github.com/ethereum/go-ethereum/blob/master/consensus/ethash/consensus.go)。
+该规范取决于 [PoW 共识算法](https://github.com/ethereum/go-ethereum/blob/master/consensus/ethash/consensus.go)。
 
 ### 区块头
 
