@@ -4,15 +4,15 @@
 
 ## 动机
 
-通过 TIBC 协议连接的一组链的用户可能希望利用在另一条链上的一条链上发行的资产，也许是为了利用额外的功能，例如交换或隐私保护，同时保留与发行链上原始资产的可互换性 . 该应用层标准描述了一种用于在与 TIBC 连接的链之间传输NFT的协议，该协议保留了资产的可替代性，保留了资产所有权，限制了拜占庭故障的影响，并且不需要额外的许可。
+通过 TIBC 协议连接的一组链的用户可能希望在一条链上使用在另一条链上发行的资产，也许是为了利用额外的功能，例如交换或隐私保护，同时保留与发行链上原始资产的唯一性。 该应用层标准描述了一种用于在与 TIBC 连接的链之间传输NFT的协议，该协议保留了资产的唯一性，保留了资产所有权，限制了拜占庭故障的影响，并且不需要额外的许可。
 
 ## 定义
 
-TIBC Handler接口和TIBC路由模块接口分别在ICS 25和ICS 26中定义。
+TIBC Handler接口和TIBC路由模块接口分别在ICS 25和TICS 26中定义。
 
 ## 要求的属性
 
-- 保持可互换性
+- 保持唯一性
 - 保持总供应量
 
 ## 技术规范
@@ -34,7 +34,7 @@ interface NonFungibleTokenPacketData {
 
 当`nft`使用`tics-30` 协议跨链发送时，它们开始累积已传输的记录。 该信息被编码到`class`字段中。
 
-`class`字段以`{prifix}/{sourceChain}/class}`形式实现, `prifix = "tibc/nft"`, 当没有`prefix`和`sourceChain`的时候，表示发送链就是`NFT`的源头，如果带有`prefix`和`sourceChain`，则表示是从`sourceChain`转过来的，比如`tibc/nft/A/B/nftClass`, 假如 C 链上存在此`NFT`，则表示`nftClass`是从 A 转到 B 再转到 C 的, 如果 C 想退回此`NFT`，那么必须先退回到B，变成`tibc/nft/A` ,再由 B 链退回到 A。
+`class`字段以`{prefix}/{sourceChain}/class}`形式实现, `prefix = "tibc/nft"`。当没有`prefix`和`sourceChain`的时候，表示发送链就是`NFT`的源头；如果带有`prefix`和`sourceChain`，则表示是从`sourceChain`转过来的。比如`tibc/nft/A/B/nftClass`，假如 C 链上存在此`NFT`，则表示`nftClass`是从 A 转到 B 再转到 C 的。如果 C 想退回此`NFT`，那么必须先退回到B，变成`tibc/nft/A`，再由 B 链退回到 A。
 
 同时`awayFromOrigin` 在`NFT`的源头发向目标链和目标链退回到源链指定的，中间的跳转构造的包的`awayFromOrigin`字段都是获取接收包中的`awayFromOrigin`字段数据。
 
@@ -58,7 +58,7 @@ interface NonFungibleTokenPacketError {
 
 此处描述的子协议应在“NFT传输桥”模块中实现，该模块可访问NFT模块和 Packet模块。
 
-#### Port Setup
+#### 端口设置
 
 必须在创建模块时（可能在初始化区块链本身时）调用 setup 函数一次以绑定到适当的端口并创建托管地址（由模块拥有）。
 
@@ -165,7 +165,7 @@ function refundTokens(packet: Packet) {
 
 ## 跨链单跳举例
 
-**A链发送NFT到B链**
+### A链发送NFT到B链
 
 >  从A链发送NFT到B链，中继链指定为空，A链只需要将NFT托管，B链生成一个对应的NFT
 
@@ -186,13 +186,10 @@ NFTPacket:
     destChain: B
 ```
 
-B链会`mint`一个新的`NFT`，**newClass = prifix + "/" + sourceChain + "/" + class = tibc/nft/A/hellokitty**
-
-----------
+B链会`mint`一个新的`NFT`，**newClass = prefix + "/" + sourceChain + "/" + class = tibc/nft/A/hellokitty**
 
 
-
-**B链将NFT退回到A**
+### B链将NFT退回到A
 
 > 将nft从B链退回到A链，B链burnNFT ,A 链释放托管的NFT
 
@@ -218,9 +215,9 @@ A链会取消HelloKitty的托管。
 
 ## 跨链两跳举例
 
-**A链通过B链将NFT发送到C**
+### A链通过B链将NFT发送到C
 
-> 首先A托管此class的NFT，然后再B链上mint一个nft，nft的class为**tibc/nft/A/hellokitty**，接着B会托管此NFT并生成一个新的packet，目标链指向C，C会再mint对应的nft。
+> 首先A托管此class的NFT，然后再B链上mint一个nft，nft的`class`为`tibc/nft/A/hellokitty`，接着B会托管此NFT并生成一个新的packet，目标链指向C，C会再mint对应的nft。
 
 A链需要将NFT托管，然后构造一个跨链数据包发送到B链
 
@@ -237,7 +234,7 @@ NFTPacket:
     destChain: B
 ```
 
-B链会mint一个新的NFT，newClass = prifix + "/" + sourceChain + "/" + class = tibc/nft/A/hellokitty,接着B链会托管刚生成的新的NFT，然后重新构造新的数据包：
+B链会mint一个新的NFT，`newClass` = prefix + "/" + sourceChain + "/" + class = `tibc/nft/A/hellokitty`,接着B链会托管刚生成的新的NFT，然后重新构造新的数据包：
 
 ```go
 NFTPacket:
@@ -256,11 +253,11 @@ C链会mint一个新的NFT，如果已经有prefix的话，则newClass = packet.
 
 
 
-**C链通过B链将NFT退回到A链**
+### C链通过B链将NFT退回到A链
 
 > C上的nft再退回到A链的过程：C会判断自己是不是远离源，如果不是，则burnNFT并构建一个packet，class为tibc/nft/A/B/hellokitty（A-C的完整路径），接着到了B之后会释放掉B托管的NFT，并burnNFT(class=tibc/nft/A /hellokitty),最后会再构造一个packet，让A链去释放最初托管的NFT，从而达到从C-A的退回目的。
 
-C链判断是否远离源链，然后burnNFT，之后构造packet发到B链
+C链判断是否远离源链，然后burn NFT，之后构造packet发到B链
 
 
 ```go
@@ -280,7 +277,7 @@ B链接受到C链发的包后，会根据包去掉packet.descChain，生成一�
 
 ```go
 NFTPacket:
-    class: tibc/nft/A /hellokitty
+    class: tibc/nft/A/hellokitty
     id: id
     sender: b...
     receiver: a...
@@ -297,10 +294,6 @@ A接收到包后会判断是否远离源链，并去掉前缀，查看自己链�
 不适用。
 
 ## 向前兼容
-
-该初始标准在通道握手中使用版本“tics30-1”。
-
-该标准的未来版本可以在通道握手中使用不同的版本，并安全地改变数据包数据格式和数据包处理程序语义。
 
 ## 示例实现
 
