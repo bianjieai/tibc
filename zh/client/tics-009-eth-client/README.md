@@ -163,7 +163,7 @@ func (cs ClientState) DelayTime() uint64 {
 
 ### 有效性断言
 
-验证区块头时，除了验证区块头自身的合法性以外，还需要验证难度系数、混合摘要、分叉判断等
+验证区块头时，除了验证区块头自身的合法性以外，还需要验证难度系数、混合摘要、分叉判断等。
 
 ```go
 func (cs ClientState) CheckHeaderAndUpdateState(store sdk.KVStore,currentHeader Header,header Header) {
