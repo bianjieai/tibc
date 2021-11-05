@@ -143,7 +143,7 @@ func EthRootMainKey(root common.Hash, height uint64) []byte {
 
 ### 延迟确认区块周期
 
-`ETH`的延迟确认应在创建轻客户端的时候自设置
+`ETH` 的延迟确认应在创建轻客户端的时候自设置
 
 ```go
 func (cs ClientState) DelayBlock() uint64{
