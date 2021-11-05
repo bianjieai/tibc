@@ -264,7 +264,7 @@ func (m ClientState) RestrictChain(cdc codec.BinaryCodec, store sdk.KVStore, new
 
 ### 状态验证功能
 
-`ETH`客户端状态验证功能根据先前验证的承诺根检查Merkle证明。
+`ETH` 客户端状态验证功能根据先前验证的承诺根检查 Merkle 证明。
 
 ```go
 func (cs ClientState) VerifyPacketCommitment(
