@@ -62,7 +62,7 @@ type ClientState struct{
 }
 ```
 
--  `Header` : 区块头
+- `Header` : 区块头
 - `ChainId`: 区块链的唯一标识符。
 - `ContractAddress`：跨链 packet 合约地址
 - `TrustingPeriod`：当前轻客户端的信任周期(ns)
