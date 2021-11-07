@@ -45,10 +45,11 @@ All standards at or past the "Draft" stage are listed here in order of their ICS
 
 ### Client
 
-| Terse Interchain Standard Number                                      | Standard Title             | Stage |
-| --------------------------------------------------------------- | -------------------------- | ----- |
-| [7](client/tics-007-tendermint-client/README.md)            | Tendermint Client          | Candidate |
+| Terse Interchain Standard Number                     | Standard Title      | Stage     |
+| ---------------------------------------------------- | ------------------- | --------- |
+| [7](client/tics-007-tendermint-client/README.md)     | Tendermint Client   | Candidate |
 | [8](client/tics-008-bsc-client/README.md)            | BSC Client          | Candidate |
+| [9](client/tics-009-eth-client/README.md)            | Ethereum Client     | Candidate |
 
 
 ### Relayer
