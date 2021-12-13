@@ -1,6 +1,6 @@
 ## Synopsis
 
-This standard document specifies packet data structure, state machine handling logic, and encoding details for the transfer of NFT over a TIBC channel between two modules on separate chains.
+This standard document specifies packet data structure, state machine handling logic, and encoding details for the transfer of NFT over a TIBC port between two modules on separate chains.
 
 ## Motivation
 
@@ -8,7 +8,7 @@ Users of a set of chains connected over the IBC protocol might wish to utilise a
 
 ## Definitions
 
-The TIBC handler interface & TIBC routing module interface are as defined in ICS 25 and TICS 26, respectively.
+The TIBC handler interface & TIBC routing module interface are as defined in TICS 25 and TICS 26, respectively.
 
 ## Desired Properties
 
@@ -101,7 +101,7 @@ function createOutgoingPacket(
             nft.BurnNFT(sender, class, id)
         }
         NonFungibleTokenPacketData data = NonFungibleTokenPacketData{class, id, uri, awayFromOrigin, sender, receiver}
-        handler.sendPacket(Packet{sequence, port, relayChain, destChain})
+        handler.sendPacket(Packet{sequence, port, relayChain, destChain, data})
     }
 ```
 
